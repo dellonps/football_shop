@@ -1,3 +1,90 @@
+TUGAS 8
+
+1. Jelaskan perbedaan antara Navigator.push() dan Navigator.pushReplacement() pada Flutter. Dalam kasus apa sebaiknya masing-masing digunakan pada aplikasi Football Shop kamu?
+    
+    - Navigator.push() menambahkan halaman baru ke atas stack navigasi, sehingga pengguna bisa kembali ke halaman sebelumnya dengan tombol back.
+
+    - Navigator.pushReplacement() menggantikan halaman saat ini dengan halaman baru, sehingga halaman sebelumnya dihapus dari stack dan pengguna tidak bisa kembali ke halaman itu.
+
+    Implementasi dalam football_shop
+
+        - Digunakan push() saat ingin pengguna bisa kembali ke halaman sebelumnya (misal, detail produk ke daftar produk).
+        
+        - Digunakan pushReplacement() saat ingin mengganti halaman sepenuhnya (misal, setelah submit form produk, langsung ke halaman utama tanpa bisa kembali ke form)
+
+2. Bagaimana kamu memanfaatkan hierarchy widget seperti Scaffold, AppBar, dan Drawer untuk membangun struktur halaman yang konsisten di seluruh aplikasi?
+
+    - Saya memanfaatkan Hierarchy Widget
+        1. Scaffold: Menjadi kerangka utama setiap halaman, menyediakan struktur dasar seperti body, appBar, drawer.
+        2. AppBar: Menampilkan judul dan aksi utama di bagian atas, menjaga konsistensi navigasi dan branding.
+        3. Drawer: Menyediakan navigasi samping yang konsisten di seluruh aplikasi.
+
+    - Contoh :
+    return Scaffold(
+        appBar: AppBar(
+            title: const Center(child: Text('Add Product Form')),
+            backgroundColor: Colors.indigo,
+            foregroundColor: Colors.white,
+        ),
+        endDrawer: RightDrawer(),
+        body: Form(
+            // ...form content...
+        ),
+    );
+
+3. Dalam konteks desain antarmuka, apa kelebihan menggunakan layout widget seperti Padding, SingleChildScrollView, dan ListView saat menampilkan elemen-elemen form? Berikan contoh penggunaannya dari aplikasi kamu.
+
+    - Kelebihan Layout Widget
+        1. Padding: Memberi ruang antar elemen agar tampilan tidak terlalu rapat.
+        2. SingleChildScrollView: Membuat seluruh form bisa di-scroll, penting untuk layar kecil.
+        3. ListView: Untuk daftar elemen yang panjang dan dinamis.
+    - Contoh implementasi di kode saya:
+        body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+            child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+                Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                    // ...kode form...
+                ),
+                ),
+                // ...kode lainnya...
+            ],
+            ),
+        ),
+        ),
+4. Bagaimana kamu menyesuaikan warna tema agar aplikasi Football Shop memiliki identitas visual yang konsisten dengan brand toko?
+
+    - Gunakan warna utama brand (misal, Colors.indigo) pada AppBar, tombol, dan elemen penting.
+    - Atur ThemeData di root aplikasi agar warna konsisten di seluruh halaman.
+
+    - Contoh implementasi di kode saya:
+
+    MaterialApp(
+    theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all(Colors.indigo),
+        ),
+        ),
+    ),
+    // ...kode lainya...
+    )
+
+
+
+
+
+
 TUGAS 7
 
 1. Apa itu widget tree di Flutter & hubungan parent-child antar widget

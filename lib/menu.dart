@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:football_shop/newslist_form.dart';
+import 'package:football_shop/widgets/left_drawer.dart';
 
 /// Halaman utama Football Shop
 class MyHomePage extends StatelessWidget {
@@ -25,6 +27,7 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.primary,
         centerTitle: true,
       ),
+      endDrawer: RightDrawer(),
       body:  Padding(
       padding: const EdgeInsets.all(16.0),
       child: Center(
@@ -66,11 +69,26 @@ class ItemCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: () {
+
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(content: Text("Kamu telah menekan tombol ${item.name}")),
             );
+
+
+          if (item.name == 'Create Product'){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                // Ganti ProductFormPage() dengan widget halaman form Anda
+                builder: (context) => const ProductFormPage(), 
+              ),
+            );
+          }
+            
+          
+          
         },
         borderRadius: BorderRadius.circular(12),
         child: Container(
