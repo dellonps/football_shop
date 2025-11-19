@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:football_shop/widgets/left_drawer.dart';
-import 'package:football_shop/menu.dart';
+import 'package:football_shop/widgets/right_drawer.dart';
+import 'package:football_shop/Screens/menu.dart';
+import 'dart:convert';
+import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+
 
 class ProductFormPage extends StatefulWidget {
     const ProductFormPage({super.key});
@@ -11,7 +15,7 @@ class ProductFormPage extends StatefulWidget {
 
 class _ProductFormPageState extends State<ProductFormPage> {
   final _formKey = GlobalKey<FormState>();
-  String _nama = "";
+  String _name = "";
   String _desc = "";
   String _category = "Baju";
   int? _price;
@@ -26,6 +30,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   ];
     @override
     Widget build(BuildContext context) {
+        final request = context.watch<CookieRequest>();
         return Scaffold(
           appBar: AppBar(
             title: const Center(
@@ -43,25 +48,25 @@ class _ProductFormPageState extends State<ProductFormPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children:[
-                  // === Nama Produk ===
+                  // === name Produk ===
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         decoration: InputDecoration(
-                          hintText: "Nama Produk",
-                          labelText: "Nama Produk",
+                          hintText: "Name Produk",
+                          labelText: "Name Produk",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
                         onChanged: (String? value) {
                           setState(() {
-                            _nama = value!;
+                            _name = value!;
                           });
                         },
                         validator: (String? value) {
                           if (value == null || value.isEmpty) {
-                            return "Nama tidak boleh kosong!";
+                            return "name tidak boleh kosong!";
                           }
                           if(value.length < 5){
                             return 'Judul minimal harus 5 karakter.';
@@ -197,9 +202,40 @@ class _ProductFormPageState extends State<ProductFormPage> {
                             backgroundColor: 
                              WidgetStateProperty.all(Colors.indigo),
                           ),
-                          onPressed: (){
+                          onPressed: ()async{
                             if(_formKey.currentState!.validate()){
-                              showDialog(
+                              final response = await request.postJson(
+                                  "http://localhost:8000/create-flutter/",
+                                  jsonEncode({
+                                    "name": _name,
+                                    "price": _price,
+                                    "description": _desc,
+                                    "thumbnail": _thumbnail,
+                                    "category": _category,
+                                    
+                                    
+                                  }),
+                                );
+                                if (context.mounted) {
+                                  if (response['status'] == 'success') {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text("News successfully saved!"),
+                                    ));
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MyHomePage()),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text("Something went wrong, please try again."),
+                                    ));
+                                  }
+                                }
+                                
+                                showDialog(
                                 context: context, 
                                 builder: (context){
                                   return AlertDialog(
@@ -209,7 +245,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                         crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                         children: [
-                                          Text('Nama: $_nama'),
+                                          Text('Name: $_name'),
                                           Text('Deskripsi: $_desc'),
                                           Text('Harga: $_price'),
                                           Text('Kategori: $_category'),
